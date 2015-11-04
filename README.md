@@ -6,10 +6,11 @@ Adds request queueing capabilities to superagent.
 ## How to use
 
 ```js
+var REQUESTS_PER_MINUTE = 120;
 var request = require('superagent');
-require('superagent-queue');
+require('superagent-queue')(REQUESTS_PER_MINUTE);
 
-// ordered get requests
+// ordered get requests (max 120 will get executed in 1 minute)
 request
   .post('/')
   .send(1)

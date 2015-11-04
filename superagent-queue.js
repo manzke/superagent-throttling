@@ -4,11 +4,23 @@
 
 var superagent = require('superagent');
 
+var RATE = 120; // requests per minute 
+
 /**
  * Module exports.
  */
 
-module.exports = extend;
+module.exports = function(rate) {
+
+  /**
+   * Extends the built-in dependency.
+   */
+
+  RATE = rate;
+
+  extend(superagent);
+  return extend;
+};
 
 /**
  * Installs the `queue` extension to superagent.
@@ -16,8 +28,6 @@ module.exports = extend;
  * @param {Object} superagent module
  * @api public
  */
-
-var RATE = 120; // requests per minute
 
 function extend(sa) {
   var Request = sa.Request;
@@ -65,8 +75,12 @@ function extend(sa) {
     var obj = item[0];
     var fn = item[1];
 
-    // immutable .length hack :\
+    var delay = (60 / RATE) * 1000;
+    delay = delay < 0 ? delay : 0;
+
     setTimeout(function() {
+
+      // immutable .length hack :\
       if (!fn) {
         oldEnd.call(obj, function() {
           unqueue(name);
@@ -82,7 +96,7 @@ function extend(sa) {
           unqueue(name);
         });
       }
-    }, (60 / RATE) * 1000);
+    }, delay);
   }
 
   /**
@@ -108,9 +122,3 @@ function extend(sa) {
     }
   };
 };
-
-/**
- * Extends the built-in dependency.
- */
-
-extend(superagent);
