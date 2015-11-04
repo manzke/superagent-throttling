@@ -40,7 +40,7 @@ describe('superagent-queue', function() {
 
   it('adds the queue method', function() {    
     (undefined == superagent.Request.prototype.queue).should.be.true;    
-    require('../superagent-queue')(-1);
+    require('../superagent-throttling')(-1);
     (undefined == superagent.Request.prototype.queue).should.be.false;
   });
 

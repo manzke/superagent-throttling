@@ -1,8 +1,8 @@
 {
-  "name": "superagent-queue",
-  "dependencies": "adds a `queue` fn to define request queues",
-  "version": "0.0.3",
-  "main": "./superagent-queue",
+  "name": "superagent-throttling",
+  "dependencies": "adds a `queue` fn to define request queues/throttling",
+  "version": "0.0.1",
+  "main": "./superagent-throttling",
   "dependencies": {
     "superagent": "*"
   },
@@ -13,7 +13,7 @@
   },
   "component": {
     "scripts": {
-      "superagent-queue": "./superagent-queue.js"
+      "superagent-throttling": "./superagent-throttling.js"
     }
   }
 }

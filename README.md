@@ -1,14 +1,14 @@
 
-# superagent-queue
+# superagent-throttling
 
-Adds request queueing capabilities to superagent.
+Adds request throttling capabilities to superagent.
 
 ## How to use
 
 ```js
 var REQUESTS_PER_MINUTE = 120;
 var request = require('superagent');
-require('superagent-queue')(REQUESTS_PER_MINUTE);
+require('superagent-throttling')(REQUESTS_PER_MINUTE);
 
 // ordered get requests (max 120 will get executed in 1 minute)
 request
