@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -18,7 +17,9 @@ module.exports = extend;
  * @api public
  */
 
-function extend(sa){
+var RATE = 120; // requests per minute
+
+function extend(sa) {
   var Request = sa.Request;
 
   /**
@@ -36,7 +37,7 @@ function extend(sa){
    * @api public
    */
 
-  Request.prototype.queue = function(name){
+  Request.prototype.queue = function(name) {
     this.queueName = name;
     return this;
   };
@@ -53,7 +54,7 @@ function extend(sa){
    * @api private
    */
 
-  function unqueue(name){
+  function unqueue(name) {
     var item = queues[name].shift();
 
     if (!item) {
@@ -65,21 +66,23 @@ function extend(sa){
     var fn = item[1];
 
     // immutable .length hack :\
-    if (!fn) {
-      oldEnd.call(obj, function(){
-        unqueue(name);
-      });
-    } else if (fn.length == 1) {
-      oldEnd.call(obj, function(res){
-        fn && fn(res);
-        unqueue(name);
-      });
-    } else {
-      oldEnd.call(obj, function(err, res){
-        fn && fn(err, res);
-        unqueue(name);
-      });
-    }
+    setTimeout(function() {
+      if (!fn) {
+        oldEnd.call(obj, function() {
+          unqueue(name);
+        });
+      } else if (fn.length == 1) {
+        oldEnd.call(obj, function(res) {
+          fn && fn(res);
+          unqueue(name);
+        });
+      } else {
+        oldEnd.call(obj, function(err, res) {
+          fn && fn(err, res);
+          unqueue(name);
+        });
+      }
+    }, (60 / RATE) * 1000);
   }
 
   /**
@@ -88,12 +91,14 @@ function extend(sa){
    * @api private
    */
 
-  Request.prototype.end = function(fn){
+  Request.prototype.end = function(fn) {
     var queue = this.queueName;
 
     if (queue) {
       if (!queues[queue]) {
-        queues[queue] = [[this, fn]];
+        queues[queue] = [
+          [this, fn]
+        ];
         unqueue(queue);
       } else {
         queues[queue].push([this, fn]);
