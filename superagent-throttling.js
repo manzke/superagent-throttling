@@ -76,7 +76,7 @@ function extend(sa) {
     var fn = item[1];
 
     var delay = (60 / RATE) * 1000;
-    delay = delay < 0 ? delay : 0;
+    delay = delay < 0 ? 0 : delay;
 
     setTimeout(function() {
 
